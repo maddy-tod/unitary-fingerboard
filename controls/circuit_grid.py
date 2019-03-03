@@ -176,8 +176,9 @@ class CircuitGrid(pygame.sprite.RenderPlain):
                         self.circuit_grid_model.set_node(wire_num, self.selected_column,
                                                          CircuitGridNode(node_types.EMPTY))
                 self.update()
-            else:
+            elif circuit_grid_node.radians == 0:
                 # Attempt to place a control qubit beginning with the wire above
+                # TODO: Handle crz correctly
                 if self.selected_wire >= 0:
                     if self.place_ctrl_qubit(self.selected_wire, self.selected_wire - 1) == -1:
                         if self.selected_wire < self.circuit_grid_model.max_wires:
@@ -229,8 +230,13 @@ class CircuitGrid(pygame.sprite.RenderPlain):
             selected_node_gate_part == node_types.Y or \
                 selected_node_gate_part == node_types.Z:
             circuit_grid_node = self.circuit_grid_model.get_node(self.selected_wire, self.selected_column)
-            circuit_grid_node.radians = (circuit_grid_node.radians + radians) % (2 * np.pi)
-            self.circuit_grid_model.set_node(self.selected_wire, self.selected_column, circuit_grid_node)
+
+            # Don't allow rotation of controlled X or Y gates
+            if circuit_grid_node.ctrl_a == -1:
+                circuit_grid_node.radians = (circuit_grid_node.radians + radians) % (2 * np.pi)
+                self.circuit_grid_model.set_node(self.selected_wire, self.selected_column, circuit_grid_node)
+            # TODO: Handle crz correctly
+            # elif selected_node_gate_part == node_types.Z:
 
         self.update()
 
