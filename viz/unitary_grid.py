@@ -29,7 +29,7 @@ class UnitaryGrid(pygame.sprite.Sprite):
         self.image = None
         self.rect = None
         self.basis_states = PITCH_STATE_NAMES
-
+        self.unitary = None
         self.set_circuit(circuit)
 
     # def update(self):
@@ -41,10 +41,10 @@ class UnitaryGrid(pygame.sprite.Sprite):
         job_sim = execute(circuit, backend_unit_sim)
         result_sim = job_sim.result()
 
-        unitary = result_sim.get_unitary(circuit, decimals=3)
+        self.unitary = result_sim.get_unitary(circuit, decimals=3)
         # print('unitary: ', unitary)
 
-        self.image = pygame.Surface([100 + len(unitary) * 50, 100 + len(unitary) * 50])
+        self.image = pygame.Surface([100 + len(self.unitary) * 50, 100 + len(self.unitary) * 50])
         self.image.convert()
         self.image.fill(WHITE)
         self.rect = self.image.get_rect()
@@ -52,17 +52,42 @@ class UnitaryGrid(pygame.sprite.Sprite):
         block_size = 30
         x_offset = 50
         y_offset = 50
-        for y in range(len(unitary)):
+        for y in range(len(self.unitary)):
             text_surface = ARIAL_30.render(self.basis_states[y], False, (0, 0, 0))
             text_surface.convert()
             self.image.blit(text_surface,(x_offset, (y + 1) * block_size + y_offset))
-            for x in range(len(unitary)):
+            for x in range(len(self.unitary)):
                 text_surface = ARIAL_30.render(self.basis_states[x], False, (0, 0, 0))
                 text_surface.convert()
                 self.image.blit(text_surface, ((x + 1) * block_size + x_offset, y_offset))
                 rect = pygame.Rect((x + 1) * block_size + x_offset,
                                    (y + 1) * block_size + y_offset,
-                                   abs(unitary[y][x]) * block_size,
-                                   abs(unitary[y][x]) * block_size)
-                if abs(unitary[y][x]) > 0:
+                                   abs(self.unitary[y][x]) * block_size,
+                                   abs(self.unitary[y][x]) * block_size)
+                if abs(self.unitary[y][x]) > 0:
                     pygame.draw.rect(self.image, BLACK, rect, 1)
+
+    # def highlight_measured_state(self, init_bit_str, meas_bit_str):
+    #     self.image = pygame.Surface([100 + len(unitary) * 50, 100 + len(unitary) * 50])
+    #     self.image.convert()
+    #     self.image.fill(WHITE)
+    #     self.rect = self.image.get_rect()
+    #
+    #     block_size = 30
+    #     x_offset = 50
+    #     y_offset = 50
+    #     for y in range(len(unitary)):
+    #         text_surface = ARIAL_30.render(self.basis_states[y], False, (0, 0, 0))
+    #         text_surface.convert()
+    #         self.image.blit(text_surface, (x_offset, (y + 1) * block_size + y_offset))
+    #         for x in range(len(unitary)):
+    #             text_surface = ARIAL_30.render(self.basis_states[x], False, (0, 0, 0))
+    #             text_surface.convert()
+    #             self.image.blit(text_surface, ((x + 1) * block_size + x_offset, y_offset))
+    #             rect = pygame.Rect((x + 1) * block_size + x_offset,
+    #                                (y + 1) * block_size + y_offset,
+    #                                abs(unitary[y][x]) * block_size,
+    #                                abs(unitary[y][x]) * block_size)
+    #             if abs(unitary[y][x]) > 0:
+    #                 pygame.draw.rect(self.image, BLACK, rect, 1)
+
