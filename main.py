@@ -138,7 +138,26 @@ def main():
 
         if time() > recent_note_time:
             melody_circ = circuit_grid_model.compute_circuit()
-            bit_str_meas = measure_circuit(melody_circ, bit_str_meas)
+
+            # TODO: Consider moving measure_circuit into circuit_grid_model
+            init_bit_str = bit_str_meas
+            bit_str_meas = measure_circuit(melody_circ, bit_str_meas, unitary_grid)
+
+            screen.blit(background, (0, 0))
+            unitary_grid.draw_unitary_grid(None, None)
+
+            unitary_grid.highlight_measured_state(init_bit_str, bit_str_meas)
+
+
+            middle_sprites.arrange()
+            right_sprites.arrange()
+            middle_sprites.draw(screen)
+            right_sprites.draw(screen)
+            circuit_grid.draw(screen)
+            pygame.display.flip()
+
+            # update_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
+            #            right_sprites, unitary_grid, statevector_grid)
 
             # pitch_meas = int(bit_str_meas, 2)
             pitch_meas = compute_pitch_by_bitstr(bit_str_meas)
@@ -399,7 +418,7 @@ def compute_pitch_by_bitstr(bitstr):
     # pitches = [36,40,43,48,52,55,60,64,67,72,76,79,84,88,91,96]
     return pitches[int(bitstr, 2)]
 
-def measure_circuit(circ, initial_bit_str):
+def measure_circuit(circ, initial_bit_str, unitary_grid):
     # Use the BasicAer qasm_simulator backend
     from qiskit import BasicAer
     backend_sim = BasicAer.get_backend('qasm_simulator')
@@ -455,7 +474,7 @@ def measure_circuit(circ, initial_bit_str):
     basis_state_str = list(counts.keys())[0]
     # print ("basis_state_str: ", basis_state_str)
 
-    # highlight_measured_state(initial_bit_str, basis_state_str)
+    # unitary_grid.highlight_measured_state(initial_bit_str, basis_state_str)
     return basis_state_str
 
 if __name__ == '__main__':

@@ -44,6 +44,9 @@ class UnitaryGrid(pygame.sprite.Sprite):
         self.unitary = result_sim.get_unitary(circuit, decimals=3)
         # print('unitary: ', unitary)
 
+        self.draw_unitary_grid(None, None)
+
+    def draw_unitary_grid(self, init_bit_str, meas_bit_str):
         self.image = pygame.Surface([100 + len(self.unitary) * 50, 100 + len(self.unitary) * 50])
         self.image.convert()
         self.image.fill(WHITE)
@@ -66,28 +69,11 @@ class UnitaryGrid(pygame.sprite.Sprite):
                                    abs(self.unitary[y][x]) * block_size)
                 if abs(self.unitary[y][x]) > 0:
                     pygame.draw.rect(self.image, BLACK, rect, 1)
+                    if not init_bit_str and not meas_bit_str:
+                        pygame.draw.rect(self.image, BLACK, rect, 1)
+                    elif y == int(init_bit_str, 2) and x == int(meas_bit_str, 2):
+                        pygame.draw.rect(self.image, BLACK, rect, 5)
 
-    # def highlight_measured_state(self, init_bit_str, meas_bit_str):
-    #     self.image = pygame.Surface([100 + len(unitary) * 50, 100 + len(unitary) * 50])
-    #     self.image.convert()
-    #     self.image.fill(WHITE)
-    #     self.rect = self.image.get_rect()
-    #
-    #     block_size = 30
-    #     x_offset = 50
-    #     y_offset = 50
-    #     for y in range(len(unitary)):
-    #         text_surface = ARIAL_30.render(self.basis_states[y], False, (0, 0, 0))
-    #         text_surface.convert()
-    #         self.image.blit(text_surface, (x_offset, (y + 1) * block_size + y_offset))
-    #         for x in range(len(unitary)):
-    #             text_surface = ARIAL_30.render(self.basis_states[x], False, (0, 0, 0))
-    #             text_surface.convert()
-    #             self.image.blit(text_surface, ((x + 1) * block_size + x_offset, y_offset))
-    #             rect = pygame.Rect((x + 1) * block_size + x_offset,
-    #                                (y + 1) * block_size + y_offset,
-    #                                abs(unitary[y][x]) * block_size,
-    #                                abs(unitary[y][x]) * block_size)
-    #             if abs(unitary[y][x]) > 0:
-    #                 pygame.draw.rect(self.image, BLACK, rect, 1)
+    def highlight_measured_state(self, init_bit_str, meas_bit_str):
+        self.draw_unitary_grid(init_bit_str, meas_bit_str)
 
