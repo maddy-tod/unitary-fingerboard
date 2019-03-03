@@ -99,6 +99,9 @@ class CircuitGridModel():
         qr = QuantumRegister(self.max_wires, 'q')
         qc = QuantumCircuit(qr)
 
+        # Add a column of identity gates to protect simulators from an empty circuit
+        qc.iden(qr)
+
         for column_num in range(self.max_columns):
             for wire_num in range(self.max_wires):
                 node = self.nodes[wire_num][column_num]
