@@ -16,6 +16,9 @@
 #
 MAX_NUM_QUBITS = 10
 
+PITCH_STATE_NAMES = ["C","D","E","F","G","A","B","c","d","e","f","g","a","b","c'","d'"]
+
+
 
 def comp_basis_states(num_qubits):
     num_qb = min(num_qubits, MAX_NUM_QUBITS)

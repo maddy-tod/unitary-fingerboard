@@ -19,7 +19,7 @@ from qiskit import BasicAer, execute
 
 from utils.colors import *
 from utils.fonts import *
-from utils.states import comp_basis_states
+from utils.states import PITCH_STATE_NAMES
 
 
 class UnitaryGrid(pygame.sprite.Sprite):
@@ -28,7 +28,8 @@ class UnitaryGrid(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.image = None
         self.rect = None
-        self.basis_states = comp_basis_states(circuit.width())
+        self.basis_states = PITCH_STATE_NAMES
+
         self.set_circuit(circuit)
 
     # def update(self):
@@ -52,10 +53,12 @@ class UnitaryGrid(pygame.sprite.Sprite):
         x_offset = 50
         y_offset = 50
         for y in range(len(unitary)):
-            text_surface = ARIAL_16.render(self.basis_states[y], False, (0, 0, 0))
+            text_surface = ARIAL_30.render(self.basis_states[y], False, (0, 0, 0))
+            text_surface.convert()
             self.image.blit(text_surface,(x_offset, (y + 1) * block_size + y_offset))
             for x in range(len(unitary)):
-                text_surface = ARIAL_16.render(self.basis_states[x], False, (0, 0, 0))
+                text_surface = ARIAL_30.render(self.basis_states[x], False, (0, 0, 0))
+                text_surface.convert()
                 self.image.blit(text_surface, ((x + 1) * block_size + x_offset, y_offset))
                 rect = pygame.Rect((x + 1) * block_size + x_offset,
                                    (y + 1) * block_size + y_offset,

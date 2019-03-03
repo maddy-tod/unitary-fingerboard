@@ -18,7 +18,7 @@ import pygame
 from qiskit import BasicAer, execute
 from utils.colors import WHITE, BLACK
 from utils.fonts import ARIAL_30
-from utils.states import comp_basis_states
+from utils.states import PITCH_STATE_NAMES
 
 
 class StatevectorGrid(pygame.sprite.Sprite):
@@ -27,7 +27,7 @@ class StatevectorGrid(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.image = None
         self.rect = None
-        self.basis_states = comp_basis_states(circuit.width())
+        self.basis_states = PITCH_STATE_NAMES
         self.set_circuit(circuit)
 
     # def update(self):
