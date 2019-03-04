@@ -161,7 +161,7 @@ def main():
 
             if prev_roli_block_y >= 0 and prev_roli_block_x >= 0:
                 # Remove the previous note from Roli block
-                prob_midi_val = int(abs(unitary_grid.unitary[prev_roli_block_y][prev_roli_block_x])**2 * 127)
+                prob_midi_val = int(abs(unitary_grid.unitary[prev_roli_block_x][prev_roli_block_y])**2 * 127)
                 midi_output.write([[[0xb0 + prev_roli_block_y, prev_roli_block_x, int(prob_midi_val)], 0]])
 
             # Save the coordinates that the measurement will be displayed

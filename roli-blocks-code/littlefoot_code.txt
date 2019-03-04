@@ -1,0 +1,50 @@
+/*
+<metadata description="Pressure Map">
+</metadata>
+*/
+
+void touchStart (int index, float x, float y, float z, float vz)
+{
+   addPressurePoint (0xffffff, x, y, z * 100.0);
+}
+
+void touchMove (int index, float x, float y, float z, float vz)
+{
+   addPressurePoint (0xffffff, x, y, z * 20.0);
+}
+
+void repaint()
+{
+    //clearDisplay();
+    //drawPressureMap();
+    //fadePressureMap();
+}
+
+void handleMIDI (int byte0, int byte1, int byte2)
+{
+    log(777);
+    log(byte0);
+    log(byte1);
+    log(byte2);
+    log(888);
+
+    if (byte0 == 0x90) {
+        sendNoteOn  (0, byte1, byte2);
+    }
+    else if ((byte0 & 0xF0) == 0xA0) {
+        if ((byte0 & 0x0F) == 0) {
+            blendRect (0xFFFFFFFF, byte1, byte2, 1, 1);
+        }
+    }
+    else if ((byte0 & 0xF0) == 0xB0) {
+        int y = byte0 & 0x0F;
+        int x = byte1;
+        int prob_argb_color = makeARGB(byte2, 0, 255, 0);
+        if (x == 0 && y == 0) {
+            clearDisplay();
+        }
+        blendRect (prob_argb_color, x, y, 1, 1);
+    }
+
+
+}
