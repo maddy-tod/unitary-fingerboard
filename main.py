@@ -151,9 +151,12 @@ def main():
 
             pitch_meas = compute_pitch_by_bitstr(bit_str_meas)
 
+            # Clear Roli Block and update unitary
+            # update_roli_block_unitary(unitary_grid)
+
             # Send MIDI to Roli Block that indicates updating display for this note
             # TODO: Change to different MIDI message
-            midi_output.write([[[0xb0, int(init_bit_str, 2), int(bit_str_meas, 2)], 0]])
+            midi_output.write([[[0xa0, int(init_bit_str, 2), int(bit_str_meas, 2)], 0]])
 
             recent_note_time += 500
             # midi_output.write([[[0x90, pitch_meas, 127], recent_note_time + 0],
@@ -352,16 +355,21 @@ def update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
     circuit_grid.draw(screen)
     pygame.display.flip()
 
+    update_roli_block_unitary(unitary_grid)
+
+
+def update_roli_block_unitary(unitary_grid):
     # Update Roli Block
     global midi_output
     unitary = unitary_grid.unitary
-    for y in range(len(unitary)):
-        for x in range(len(unitary)):
-            # Send probability value in a range from 0..127 inclusive where 127 means 1.0
-            # Use a separate MIDI Control Change xb0000-xb00FF for each point on the block
-            prob_midi_val = int(abs(unitary[x][y])**2 * 127)
-            # print("prob_midi_val ", x, ", ", y, ": ", prob_midi_val)
-            midi_output.write([[[0xb0 + y, x, int(prob_midi_val)], 0]])
+    if unitary is not None:
+        for y in range(len(unitary)):
+            for x in range(len(unitary)):
+                # Send probability value in a range from 0..127 inclusive where 127 means 1.0
+                # Use a separate MIDI Control Change xb0000-xb00FF for each point on the block
+                prob_midi_val = int(abs(unitary[x][y])**2 * 127)
+                # print("prob_midi_val ", x, ", ", y, ": ", prob_midi_val)
+                midi_output.write([[[0xb0 + y, x, int(prob_midi_val)], 0]])
 
 
 def move_update_circuit_grid_display(circuit_grid, direction):
