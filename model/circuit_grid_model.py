@@ -25,6 +25,7 @@ class CircuitGridModel():
         self.max_columns = max_columns
         self.nodes = np.empty((max_wires, max_columns),
                                 dtype = CircuitGridNode)
+        self.latest_computed_circuit = None
 
     def __str__(self):
         retval = ''
@@ -177,6 +178,7 @@ class CircuitGridModel():
                             # Swap gate
                             qc.swap(qr[wire_num], qr[node.swap])
 
+        self.latest_computed_circuit = qc
         return qc
 
 

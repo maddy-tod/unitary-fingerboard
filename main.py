@@ -123,9 +123,15 @@ def main():
 
     bit_str_meas = '0000'
 
+    #
+    prev_roli_block_y = -1
+    prev_roli_block_x = -1
+
+    # Clear Roli Block and update unitary
+    update_roli_block_unitary(unitary_grid)
+
     beg_time = time()
     recent_note_time = beg_time
-
 
     # Main Loop
     going = True
@@ -135,7 +141,9 @@ def main():
         pygame.time.wait(10)
 
         if time() > recent_note_time:
-            melody_circ = circuit_grid_model.compute_circuit()
+            melody_circ = circuit_grid_model.latest_computed_circuit
+            if not melody_circ:
+                melody_circ = circuit_grid_model.compute_circuit()
 
             # TODO: Consider moving measure_circuit into circuit_grid_model
             init_bit_str = bit_str_meas
@@ -151,14 +159,19 @@ def main():
 
             pitch_meas = compute_pitch_by_bitstr(bit_str_meas)
 
-            # Clear Roli Block and update unitary
-            # update_roli_block_unitary(unitary_grid)
+            if prev_roli_block_y >= 0 and prev_roli_block_x >= 0:
+                # Remove the previous note from Roli block
+                prob_midi_val = int(abs(unitary_grid.unitary[prev_roli_block_y][prev_roli_block_x])**2 * 127)
+                midi_output.write([[[0xb0 + prev_roli_block_y, prev_roli_block_x, int(prob_midi_val)], 0]])
+
+            # Save the coordinates that the measurement will be displayed
+            prev_roli_block_y = int(init_bit_str, 2)
+            prev_roli_block_x = int(bit_str_meas, 2)
 
             # Send MIDI to Roli Block that indicates updating display for this note
-            # TODO: Change to different MIDI message
-            midi_output.write([[[0xa0, int(init_bit_str, 2), int(bit_str_meas, 2)], 0]])
+            midi_output.write([[[0xa0, prev_roli_block_y, prev_roli_block_x], 0]])
 
-            recent_note_time += 500
+            recent_note_time += 750
             # midi_output.write([[[0x90, pitch_meas, 127], recent_note_time + 0],
             #                    [[0x90, pitch_meas, 0], recent_note_time + 500]])
             midi_output.write([[[0x90, pitch_meas, 127], recent_note_time + 0]])
@@ -361,6 +374,10 @@ def update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
 def update_roli_block_unitary(unitary_grid):
     # Update Roli Block
     global midi_output
+
+    # Send a MIDI Program Change to clear the Roli Block display
+    midi_output.write([[[0xc0, 0, 0], 0]])
+
     unitary = unitary_grid.unitary
     if unitary is not None:
         for y in range(len(unitary)):
