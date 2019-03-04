@@ -141,14 +141,9 @@ def main():
 
             screen.blit(background, (0, 0))
             unitary_grid.draw_unitary_grid(None, None)
-
             unitary_grid.highlight_measured_state(init_bit_str, bit_str_meas)
-
-
             middle_sprites.arrange()
-            # right_sprites.arrange()
             middle_sprites.draw(screen)
-            # right_sprites.draw(screen)
             circuit_grid.draw(screen)
             pygame.display.flip()
 
@@ -204,37 +199,37 @@ def main():
                 if event.button == BTN_A:
                     # Place X gate
                     circuit_grid.handle_input_x()
-                    update_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
+                    update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
                                unitary_grid)
                     pygame.display.flip()
                 elif event.button == BTN_X:
                     # Place Y gate
                     circuit_grid.handle_input_y()
-                    update_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
+                    update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
                                unitary_grid)
                     pygame.display.flip()
                 elif event.button == BTN_B:
                     # Place Z gate
                     circuit_grid.handle_input_z()
-                    update_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
+                    update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
                                unitary_grid)
                     pygame.display.flip()
                 elif event.button == BTN_Y:
                     # Place Hadamard gate
                     circuit_grid.handle_input_h()
-                    update_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
+                    update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
                                unitary_grid)
                     pygame.display.flip()
                 elif event.button == BTN_RIGHT_TRIGGER:
                     # Delete gate
                     circuit_grid.handle_input_delete()
-                    update_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
+                    update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
                                unitary_grid)
                     pygame.display.flip()
                 elif event.button == BTN_RIGHT_THUMB:
                     # Add or remove a control
                     circuit_grid.handle_input_ctrl()
-                    update_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
+                    update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
                                unitary_grid)
                     pygame.display.flip()
 
@@ -242,22 +237,22 @@ def main():
                 # print("event: ", event)
                 if event.axis == AXIS_RIGHT_THUMB_X and joystick.get_axis(AXIS_RIGHT_THUMB_X) >= 0.95:
                     circuit_grid.handle_input_rotate(np.pi / 8)
-                    update_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
+                    update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
                                unitary_grid)
                     pygame.display.flip()
                 if event.axis == AXIS_RIGHT_THUMB_X and joystick.get_axis(AXIS_RIGHT_THUMB_X) <= -0.95:
                     circuit_grid.handle_input_rotate(-np.pi / 8)
-                    update_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
+                    update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
                                unitary_grid)
                     pygame.display.flip()
                 if event.axis == AXIS_RIGHT_THUMB_Y and joystick.get_axis(AXIS_RIGHT_THUMB_Y) <= -0.95:
                     circuit_grid.handle_input_move_ctrl(MOVE_UP)
-                    update_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
+                    update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
                                unitary_grid)
                     pygame.display.flip()
                 if event.axis == AXIS_RIGHT_THUMB_Y and joystick.get_axis(AXIS_RIGHT_THUMB_Y) >= 0.95:
                     circuit_grid.handle_input_move_ctrl(MOVE_DOWN)
-                    update_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
+                    update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
                                unitary_grid)
                     pygame.display.flip()
 
@@ -283,67 +278,65 @@ def main():
                     pygame.display.flip()
                 elif event.key == K_x:
                     circuit_grid.handle_input_x()
-                    update_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
+                    update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
                                unitary_grid)
                     pygame.display.flip()
                 elif event.key == K_y:
                     circuit_grid.handle_input_y()
-                    update_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
+                    update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
                                unitary_grid)
                     pygame.display.flip()
                 elif event.key == K_z:
                     circuit_grid.handle_input_z()
-                    update_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
+                    update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
                                unitary_grid)
                     pygame.display.flip()
                 elif event.key == K_h:
                     circuit_grid.handle_input_h()
-                    update_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
+                    update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
                                unitary_grid)
                     pygame.display.flip()
                 elif event.key == K_BACKSLASH:
                     circuit_grid.handle_input_delete()
-                    update_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
+                    update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
                                unitary_grid)
                     pygame.display.flip()
                 elif event.key == K_c:
                     # Add or remove a control
                     circuit_grid.handle_input_ctrl()
-                    update_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
+                    update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
                                unitary_grid)
                     pygame.display.flip()
                 elif event.key == K_UP:
                     # Move a control qubit up
                     circuit_grid.handle_input_move_ctrl(MOVE_UP)
-                    update_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
+                    update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
                                unitary_grid)
                     pygame.display.flip()
                 elif event.key == K_DOWN:
                     # Move a control qubit down
                     circuit_grid.handle_input_move_ctrl(MOVE_DOWN)
-                    update_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
+                    update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
                                unitary_grid)
                     pygame.display.flip()
                 elif event.key == K_LEFT:
                     # Rotate a gate
                     circuit_grid.handle_input_rotate(-np.pi/8)
-                    update_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
+                    update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
                                unitary_grid)
                     pygame.display.flip()
                 elif event.key == K_RIGHT:
                     # Rotate a gate
                     circuit_grid.handle_input_rotate(np.pi / 8)
-                    update_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
+                    update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
                                unitary_grid)
                     pygame.display.flip()
 
     pygame.quit()
 
 
-def update_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
-                            unitary_grid):
-    # Update visualizations
-    # TODO: Refactor following code into methods, etc.
+def update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
+                           unitary_grid):
     screen.blit(background, (0, 0))
     circuit = circuit_grid_model.compute_circuit()
     unitary_grid.set_circuit(circuit)
@@ -352,10 +345,12 @@ def update_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
     circuit_grid.draw(screen)
     pygame.display.flip()
 
+
 def move_update_circuit_grid_display(circuit_grid, direction):
     circuit_grid.move_to_adjacent_node(direction)
     circuit_grid.draw(screen)
     pygame.display.flip()
+
 
 def print_midi_device_info():
     for i in range(pygame.midi.get_count()):
