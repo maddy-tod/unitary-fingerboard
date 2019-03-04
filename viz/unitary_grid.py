@@ -65,9 +65,9 @@ class UnitaryGrid(pygame.sprite.Sprite):
                 self.image.blit(text_surface, ((x + 1) * block_size + x_offset, y_offset))
                 rect = pygame.Rect((x + 1) * block_size + x_offset,
                                    (y + 1) * block_size + y_offset,
-                                   abs(self.unitary[y][x]) * block_size,
-                                   abs(self.unitary[y][x]) * block_size)
-                if abs(self.unitary[y][x]) > 0:
+                                   abs(self.unitary[x][y]) * block_size,
+                                   abs(self.unitary[x][y]) * block_size)
+                if abs(self.unitary[x][y]) > 0:
                     pygame.draw.rect(self.image, BLACK, rect, 1)
                     if init_bit_str and meas_bit_str:
                         if y == int(init_bit_str, 2) and x == int(meas_bit_str, 2):
