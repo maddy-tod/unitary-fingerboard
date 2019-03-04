@@ -77,8 +77,6 @@ def main():
 
     unitary_grid = UnitaryGrid(circuit)
 
-    # statevector_grid = StatevectorGrid(circuit)
-
     middle_sprites = VBox(400, 10, unitary_grid)
 
     circuit_grid = CircuitGrid(10, 600, circuit_grid_model)
@@ -149,11 +147,16 @@ def main():
 
             pitch_meas = compute_pitch_by_bitstr(bit_str_meas)
 
+            # Send MIDI to Roli Block that indicates updating display for this note
+            # TODO: Change to different MIDI message
+            midi_output.write([[[0x91, int(init_bit_str, 2), int(bit_str_meas, 2)], 0]])
+
             recent_note_time += 500
             # midi_output.write([[[0x90, pitch_meas, 127], recent_note_time + 0],
             #                    [[0x90, pitch_meas, 0], recent_note_time + 500]])
             midi_output.write([[[0x90, pitch_meas, 127], recent_note_time + 0]])
             # melody_circ = createTransitionCircuit(cur_mel_midi_vals)
+
 
         if joystick:
             gamepad_move = False
