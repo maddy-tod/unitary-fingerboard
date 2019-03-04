@@ -69,10 +69,9 @@ class UnitaryGrid(pygame.sprite.Sprite):
                                    abs(self.unitary[y][x]) * block_size)
                 if abs(self.unitary[y][x]) > 0:
                     pygame.draw.rect(self.image, BLACK, rect, 1)
-                    if not init_bit_str and not meas_bit_str:
-                        pygame.draw.rect(self.image, BLACK, rect, 1)
-                    elif y == int(init_bit_str, 2) and x == int(meas_bit_str, 2):
-                        pygame.draw.rect(self.image, BLACK, rect, 5)
+                    if init_bit_str and meas_bit_str:
+                        if y == int(init_bit_str, 2) and x == int(meas_bit_str, 2):
+                            pygame.draw.rect(self.image, BLACK, rect, 5)
 
     def highlight_measured_state(self, init_bit_str, meas_bit_str):
         self.draw_unitary_grid(init_bit_str, meas_bit_str)

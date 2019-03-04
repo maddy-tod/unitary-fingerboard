@@ -470,7 +470,7 @@ def measure_circuit(circ, initial_bit_str, unitary_grid):
 
     # Print the counts, which are contained in a Python dictionary
     counts = result_sim.get_counts(complete_circuit)
-    print(counts)
+    # print(counts)
     basis_state_str = list(counts.keys())[0]
     # print ("basis_state_str: ", basis_state_str)
 
