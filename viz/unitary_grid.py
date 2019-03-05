@@ -15,6 +15,7 @@
 # limitations under the License.
 #
 import pygame
+import numpy as np
 from qiskit import BasicAer, execute
 
 from utils.colors import *
@@ -30,6 +31,7 @@ class UnitaryGrid(pygame.sprite.Sprite):
         self.rect = None
         self.basis_states = PITCH_STATE_NAMES
         self.unitary = None
+        self.desired_matrix = None
         self.set_circuit(circuit)
 
     # def update(self):
@@ -42,6 +44,7 @@ class UnitaryGrid(pygame.sprite.Sprite):
         result_sim = job_sim.result()
 
         self.unitary = result_sim.get_unitary(circuit, decimals=3)
+        self.desired_matrix = np.zeros((len(self.unitary), len(self.unitary)))
         # print('unitary: ', unitary)
 
         self.draw_unitary_grid(None, None)
@@ -72,6 +75,14 @@ class UnitaryGrid(pygame.sprite.Sprite):
                     if init_bit_str and meas_bit_str:
                         if y == int(init_bit_str, 2) and x == int(meas_bit_str, 2):
                             pygame.draw.rect(self.image, BLACK, rect, 5)
+
+                # Draw where touched on Roli Block
+                if self.desired_matrix[x][y] != 0:
+                    radius = int(self.desired_matrix[x][y] * 8)
+                    x_pos = int((x + 1) * block_size + x_offset + (block_size / 2))
+                    y_pos = int((y + 1) * block_size + y_offset + (block_size / 2))
+                    circle_color = pygame.Color(0, 0, 255)
+                    pygame.draw.circle(self.image, circle_color, (y_pos, x_pos), radius)
 
     def highlight_measured_state(self, init_bit_str, meas_bit_str):
         self.draw_unitary_grid(init_bit_str, meas_bit_str)

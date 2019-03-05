@@ -94,6 +94,9 @@ def main():
     gamepad_pressed_timer = 0
     gamepad_last_update = pygame.time.get_ticks()
 
+    pygame.fastevent.init()
+    event_get = pygame.fastevent.get
+
     # MIDI setup
     # TODO: Put in functions or class/methods
     pygame.midi.init()
@@ -217,6 +220,9 @@ def main():
             #     print("event: ", event)
             if event.type == QUIT:
                 going = False
+            elif event.type in [pygame.midi.MIDIIN]:
+                print("MIDI event: ", event)
+
 
             elif event.type == JOYBUTTONDOWN:
                 if event.button == BTN_A:
@@ -355,6 +361,23 @@ def main():
                                unitary_grid)
                     pygame.display.flip()
 
+        if i.poll():
+            midi_events = i.read(10)
+
+            # convert them into pygame events.
+            midi_evs = pygame.midi.midis2events(midi_events, i.device_id)
+
+            for index, midi_ev in enumerate(midi_evs):
+                # print("found something in poll ", midi_ev.status, midi_ev.data1, midi_ev.data2)
+                if 176 <= midi_ev.status < 192:
+                    if unitary_grid.desired_matrix is not None:
+                        row_num = midi_ev.status - 176
+                        col_num = midi_ev.data1
+                        unitary_grid.desired_matrix[row_num, col_num] = midi_ev.data2 / 127.0
+                        unitary_grid.draw_unitary_grid(None, None)
+                    # print("Found 176-191 in poll ", midi_ev.status, midi_ev.data1, midi_ev.data2)
+
+    del i
     pygame.quit()
 
 
@@ -385,7 +408,6 @@ def update_roli_block_unitary(unitary_grid):
                 # Send probability value in a range from 0..127 inclusive where 127 means 1.0
                 # Use a separate MIDI Control Change xb0000-xb00FF for each point on the block
                 prob_midi_val = int(abs(unitary[x][y])**2 * 127)
-                # print("prob_midi_val ", x, ", ", y, ": ", prob_midi_val)
                 midi_output.write([[[0xb0 + y, x, int(prob_midi_val)], 0]])
 
 

@@ -5,19 +5,31 @@
 
 void touchStart (int index, float x, float y, float z, float vz)
 {
-   addPressurePoint (0xffffff, x, y, z * 10.0);
+   drawTouch(x, y, z);
+
 }
 
 void touchMove (int index, float x, float y, float z, float vz)
 {
-   addPressurePoint (0xffffff, x, y, z * 10.0);
+   drawTouch(x, y, z);
+}
+
+void drawTouch (float touchX, float touchY, float z) {
+    int x = int(map(touchX, 0.0, 2.0, 0.0, 16.0));
+    int y = int(map(touchY, 0.0, 2.0, 0.0, 16.0));
+    int pressureRange_0_127 = int(map(z, 0.0, 1.0, 0.0, 127.0));
+    int pressure_argb_color = makeARGB(pressureRange_0_127 * 2, 0, 0, 255);
+    fillRect (0x00000000, x, y, 1, 1);
+    blendRect (pressure_argb_color, x, y, 1, 1);
+
+    log(pressureRange_0_127);
+    sendCC(y, x, pressureRange_0_127);
+
 }
 
 void repaint()
 {
-    //clearDisplay();
-    //drawPressureMap();
-    //fadePressureMap();
+    // clearDisplay();
 }
 
 void handleMIDI (int byte0, int byte1, int byte2)
@@ -46,7 +58,10 @@ void handleMIDI (int byte0, int byte1, int byte2)
             clearDisplay();
         }
     }
+}
 
-
+void handleButtonDown (int index)
+{
+    clearDisplay();
 }
 
