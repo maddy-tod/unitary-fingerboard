@@ -84,9 +84,9 @@ class CircuitGridModel():
                     if other_node.ctrl_a == control_wire_num or \
                             other_node.ctrl_b == control_wire_num:
                         gate_wire_num =  wire_idx
-                        print("Found gate: ",
-                              self.get_node_gate_part(gate_wire_num, column_num),
-                              " on wire: " , gate_wire_num)
+                        # print("Found gate: ",
+                        #       self.get_node_gate_part(gate_wire_num, column_num),
+                        #       " on wire: " , gate_wire_num)
         return gate_wire_num
 
     # def avail_gate_parts_for_node(self, wire_num, column_num):

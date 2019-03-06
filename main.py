@@ -75,7 +75,54 @@ def main():
 
     circuit_grid_model = CircuitGridModel(NUM_QUBITS, 18)
 
-    # circuit_grid_model.set_node(0, 0, CircuitGridNode(node_types.IDEN))
+    circuit_grid_model.set_node(0, 0, CircuitGridNode(node_types.IDEN))
+
+    circuit_grid_model.set_node(0, 1, CircuitGridNode(node_types.H))
+
+    circuit_grid_model.set_node(2, 2, CircuitGridNode(node_types.X, 0, 0))
+    circuit_grid_model.set_node(1, 2, CircuitGridNode(node_types.TRACE))
+
+    circuit_grid_model.set_node(0, 0, CircuitGridNode(node_types.X, np.pi/8))
+    circuit_grid_model.set_node(1, 0, CircuitGridNode(node_types.Y, -np.pi/4))
+    circuit_grid_model.set_node(2, 0, CircuitGridNode(node_types.Z, np.pi/4))
+
+    circuit_grid_model.set_node(0, 1, CircuitGridNode(node_types.X))
+    circuit_grid_model.set_node(1, 1, CircuitGridNode(node_types.Y))
+    circuit_grid_model.set_node(2, 1, CircuitGridNode(node_types.Z))
+
+    circuit_grid_model.set_node(0, 2, CircuitGridNode(node_types.S))
+    circuit_grid_model.set_node(1, 2, CircuitGridNode(node_types.T))
+    circuit_grid_model.set_node(2, 2, CircuitGridNode(node_types.H))
+
+    circuit_grid_model.set_node(0, 3, CircuitGridNode(node_types.SDG))
+    circuit_grid_model.set_node(1, 3, CircuitGridNode(node_types.TDG))
+    circuit_grid_model.set_node(2, 3, CircuitGridNode(node_types.IDEN))
+
+    circuit_grid_model.set_node(2, 4, CircuitGridNode(node_types.X, 0, 0))
+    circuit_grid_model.set_node(1, 4, CircuitGridNode(node_types.TRACE))
+
+    circuit_grid_model.set_node(0, 5, CircuitGridNode(node_types.IDEN))
+    circuit_grid_model.set_node(2, 5, CircuitGridNode(node_types.Z, np.pi/4, 1))
+
+    circuit_grid_model.set_node(2, 6, CircuitGridNode(node_types.X, 0, 0, 1))
+
+    circuit_grid_model.set_node(1, 7, CircuitGridNode(node_types.H, 0, 2))
+    circuit_grid_model.set_node(0, 7, CircuitGridNode(node_types.IDEN))
+
+    circuit_grid_model.set_node(1, 8, CircuitGridNode(node_types.Y, 0, 0))
+    circuit_grid_model.set_node(2, 8, CircuitGridNode(node_types.IDEN))
+
+    circuit_grid_model.set_node(2, 9, CircuitGridNode(node_types.Z, 0, 0))
+    circuit_grid_model.set_node(1, 9, CircuitGridNode(node_types.TRACE))
+
+    circuit_grid_model.set_node(0, 10, CircuitGridNode(node_types.IDEN))
+    circuit_grid_model.set_node(1, 10, CircuitGridNode(node_types.SWAP, 0, -1, -1, 2))
+
+    circuit_grid_model.set_node(2, 11, CircuitGridNode(node_types.SWAP, 0, 1, -1, 0))
+
+    circuit_grid_model.set_node(0, 12, CircuitGridNode(node_types.X, 0, 1, 2))
+
+    print("str(circuit_grid_model): ", str(circuit_grid_model))
 
     circuit = circuit_grid_model.compute_circuit()
 
@@ -367,7 +414,7 @@ def main():
         # TODO:     update respective matrices
         desired_vs_unitary_dirty = False
         if i.poll():
-            midi_events = i.read(100)
+            midi_events = i.read(1000)
 
             # convert them into pygame events.
             midi_evs = pygame.midi.midis2events(midi_events, i.device_id)
