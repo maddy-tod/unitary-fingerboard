@@ -363,6 +363,9 @@ def main():
                                unitary_grid)
                     pygame.display.flip()
 
+        # TODO: Put this flag in unitary_grid, making methods to
+        # TODO:     update respective matrices
+        desired_vs_unitary_dirty = False
         if i.poll():
             midi_events = i.read(100)
 
@@ -370,14 +373,21 @@ def main():
             midi_evs = pygame.midi.midis2events(midi_events, i.device_id)
 
             for index, midi_ev in enumerate(midi_evs):
-                # print("found something in poll ", midi_ev.status, midi_ev.data1, midi_ev.data2)
                 if 160 <= midi_ev.status < 176:
                     if unitary_grid.desired_matrix is not None:
                         row_num = midi_ev.status - 160
                         col_num = midi_ev.data1
                         unitary_grid.desired_matrix[row_num, col_num] = midi_ev.data2 / 127.0
-                        unitary_grid.draw_unitary_grid(None, None)
-                    # print("Found 176-191 in poll ", midi_ev.status, midi_ev.data1, midi_ev.data2)
+                        desired_vs_unitary_dirty = True
+
+            if desired_vs_unitary_dirty:
+                unitary_grid.draw_unitary_grid(None, None)
+                print('after block swipe, mse: ', unitary_grid.cost_desired_vs_unitary())
+
+                # TODO: Apply optimization
+
+                # TODO: Uncomment to reset dirty flag
+                # desired_vs_unitary_dirty = False
 
     del i
     pygame.quit()

@@ -49,8 +49,7 @@ class UnitaryGrid(pygame.sprite.Sprite):
 
         self.draw_unitary_grid(None, None)
 
-        print('mse: ', self.cost_desired_vs_unitary())
-
+        print('in set_circiut, mse: ', self.cost_desired_vs_unitary())
 
     def draw_unitary_grid(self, init_bit_str, meas_bit_str):
         self.image = pygame.Surface([100 + len(self.unitary) * 50, 100 + len(self.unitary) * 50])
