@@ -15,7 +15,9 @@
 # limitations under the License.
 #
 # TODO: Create viz that displays generated Qiskit code for circuit
-# TODO: Prevent error from occurring when circuit is empty
+# TODO: Standardize/straighten out row/column ordering related to unitary
+# TODO:     grid on display and Roli Block
+# TODO: Center probability squares on unitary grid display
 #
 """Create quantum circuits with Qiskit and Pygame"""
 

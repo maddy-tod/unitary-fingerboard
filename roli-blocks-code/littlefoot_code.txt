@@ -23,7 +23,7 @@ void drawTouch (float touchX, float touchY, float z) {
     blendRect (pressure_argb_color, x, y, 1, 1);
 
     log(pressureRange_0_127);
-    sendCC(y, x, pressureRange_0_127);
+    sendMIDI(0xA0 + y, x, pressureRange_0_127);
 
 }
 
@@ -43,10 +43,12 @@ void handleMIDI (int byte0, int byte1, int byte2)
     }
     else if ((byte0 & 0xF0) == 0xA0) {
         if ((byte0 & 0x0F) == 0) {
+            // Display incoming pitch
             blendRect (0xFFFFFFFF, byte2, byte1, 1, 1);
         }
     }
     else if ((byte0 & 0xF0) == 0xB0) {
+        // Display incoming unitary matrix probabilies
         int y = byte0 & 0x0F;
         int x = byte1;
         int prob_argb_color = makeARGB(byte2, 0, 255, 0);
@@ -55,6 +57,7 @@ void handleMIDI (int byte0, int byte1, int byte2)
     }
     else if ((byte0 & 0xF0) == 0xC0) {
         if ((byte0 & 0x0F) == 0) {
+            // Clear the display
             clearDisplay();
         }
     }
