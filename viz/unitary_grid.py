@@ -49,6 +49,9 @@ class UnitaryGrid(pygame.sprite.Sprite):
 
         self.draw_unitary_grid(None, None)
 
+        print('mse: ', self.cost_desired_vs_unitary())
+
+
     def draw_unitary_grid(self, init_bit_str, meas_bit_str):
         self.image = pygame.Surface([100 + len(self.unitary) * 50, 100 + len(self.unitary) * 50])
         self.image.convert()
@@ -86,4 +89,10 @@ class UnitaryGrid(pygame.sprite.Sprite):
 
     def highlight_measured_state(self, init_bit_str, meas_bit_str):
         self.draw_unitary_grid(init_bit_str, meas_bit_str)
+
+    def cost_desired_vs_unitary(self):
+        mse = np.square(np.square(np.abs(self.desired_matrix)) -
+                        np.square(np.abs(self.unitary))).mean()
+        return mse
+
 
