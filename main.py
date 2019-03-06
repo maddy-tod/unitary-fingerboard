@@ -33,6 +33,7 @@ from model.circuit_grid_model import *
 from model import circuit_node_types as node_types
 from containers.vbox import VBox
 from utils.colors import *
+from utils.states import NUM_QUBITS
 from utils.navigation import *
 from utils.gamepad import *
 from viz.circuit_diagram import CircuitDiagram
@@ -40,7 +41,6 @@ from viz.unitary_grid import UnitaryGrid
 from controls.circuit_grid import *
 
 WINDOW_SIZE = 1500, 1000
-NUM_QUBITS = 4
 
 if not pygame.font: print('Warning, fonts disabled')
 if not pygame.mixer: print('Warning, sound disabled')
@@ -439,13 +439,14 @@ def main():
                 for idx in range(len(rotation_gate_nodes)):
                     # circuit_grid.rotate_gate_absolute(rot_gate_node, random.uniform(0, np.pi))
                     initial_rotations[idx] = rotation_gate_nodes[idx].radians
-                    rotation_bounds[idx] = [0.0, np.pi]
+                    rotation_bounds[idx] = [np.pi / 8, 7 * np.pi / 8]
 
-                scipy.optimize.fmin_l_bfgs_b(desired_vs_unitary_objective_function,
-                                             x0=initial_rotations,
-                                             args=(circuit_grid, unitary_grid, rotation_gate_nodes),
-                                             # bounds=rotation_bounds,
-                                             approx_grad=True)
+                results = scipy.optimize.fmin_l_bfgs_b(desired_vs_unitary_objective_function,
+                                                       x0=initial_rotations,
+                                                       args=(circuit_grid, unitary_grid, rotation_gate_nodes),
+                                                       approx_grad=True,
+                                                       bounds=rotation_bounds)
+                print('results: ', results)
 
                 update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
                                 unitary_grid)

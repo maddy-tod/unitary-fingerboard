@@ -15,6 +15,7 @@
 # limitations under the License.
 #
 MAX_NUM_QUBITS = 10
+NUM_QUBITS = 4
 
 PITCH_STATE_NAMES = ["C","D","E","F","G","A","B","c","d","e","f","g","a","b","c'","d'"]
 

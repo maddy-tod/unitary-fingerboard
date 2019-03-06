@@ -20,7 +20,7 @@ from qiskit import BasicAer, execute
 
 from utils.colors import *
 from utils.fonts import *
-from utils.states import PITCH_STATE_NAMES
+from utils.states import PITCH_STATE_NAMES, NUM_QUBITS
 
 
 class UnitaryGrid(pygame.sprite.Sprite):
@@ -31,7 +31,7 @@ class UnitaryGrid(pygame.sprite.Sprite):
         self.rect = None
         self.basis_states = PITCH_STATE_NAMES
         self.unitary = None
-        self.desired_matrix = None
+        self.desired_matrix = np.zeros((2**NUM_QUBITS, 2**NUM_QUBITS))
         self.set_circuit(circuit)
 
     # def update(self):
@@ -44,7 +44,7 @@ class UnitaryGrid(pygame.sprite.Sprite):
         result_sim = job_sim.result()
 
         self.unitary = result_sim.get_unitary(circuit, decimals=3)
-        self.desired_matrix = np.zeros((len(self.unitary), len(self.unitary)))
+        # self.desired_matrix = np.zeros((len(self.unitary), len(self.unitary)))
         # print('unitary: ', unitary)
 
         self.draw_unitary_grid(None, None)
