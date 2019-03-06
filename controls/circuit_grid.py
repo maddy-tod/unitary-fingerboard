@@ -240,6 +240,21 @@ class CircuitGrid(pygame.sprite.RenderPlain):
 
         self.update()
 
+    def rotate_gate_absolute(self, gate_node, radians):
+        if gate_node.node_type == node_types.X or \
+                gate_node.node_type == node_types.Y or \
+                gate_node.node_type == node_types.Z:
+            circuit_grid_node = self.circuit_grid_model.get_node(gate_node.wire_num, gate_node.column_num)
+
+            # Don't allow rotation of controlled X or Y gates
+            if circuit_grid_node.ctrl_a == -1:
+                circuit_grid_node.radians = radians
+                self.circuit_grid_model.set_node(gate_node.wire_num, gate_node.column_num, circuit_grid_node)
+            # TODO: Handle crz correctly
+            # elif selected_node_gate_part == node_types.Z:
+
+        self.update()
+
     def place_ctrl_qubit(self, gate_wire_num, candidate_ctrl_wire_num):
         """Attempt to place a control qubit on a wire.
         If successful, return the wire number. If not, return -1

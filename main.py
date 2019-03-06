@@ -21,6 +21,7 @@
 #
 """Create quantum circuits with Qiskit and Pygame"""
 
+import random
 from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister
 from qiskit import execute
 # import pygame, pygame.midi
@@ -75,54 +76,52 @@ def main():
 
     circuit_grid_model = CircuitGridModel(NUM_QUBITS, 18)
 
-    circuit_grid_model.set_node(0, 0, CircuitGridNode(node_types.IDEN))
-
-    circuit_grid_model.set_node(0, 1, CircuitGridNode(node_types.H))
-
-    circuit_grid_model.set_node(2, 2, CircuitGridNode(node_types.X, 0, 0))
-    circuit_grid_model.set_node(1, 2, CircuitGridNode(node_types.TRACE))
-
-    circuit_grid_model.set_node(0, 0, CircuitGridNode(node_types.X, np.pi/8))
-    circuit_grid_model.set_node(1, 0, CircuitGridNode(node_types.Y, -np.pi/4))
-    circuit_grid_model.set_node(2, 0, CircuitGridNode(node_types.Z, np.pi/4))
-
-    circuit_grid_model.set_node(0, 1, CircuitGridNode(node_types.X))
+    circuit_grid_model.set_node(0, 1, CircuitGridNode(node_types.Y))
     circuit_grid_model.set_node(1, 1, CircuitGridNode(node_types.Y))
-    circuit_grid_model.set_node(2, 1, CircuitGridNode(node_types.Z))
+    circuit_grid_model.set_node(2, 1, CircuitGridNode(node_types.Y))
+    circuit_grid_model.set_node(3, 1, CircuitGridNode(node_types.Y))
 
-    circuit_grid_model.set_node(0, 2, CircuitGridNode(node_types.S))
-    circuit_grid_model.set_node(1, 2, CircuitGridNode(node_types.T))
-    circuit_grid_model.set_node(2, 2, CircuitGridNode(node_types.H))
+    circuit_grid_model.set_node(1, 2, CircuitGridNode(node_types.X, 0, 0))
 
-    circuit_grid_model.set_node(0, 3, CircuitGridNode(node_types.SDG))
-    circuit_grid_model.set_node(1, 3, CircuitGridNode(node_types.TDG))
-    circuit_grid_model.set_node(2, 3, CircuitGridNode(node_types.IDEN))
+    circuit_grid_model.set_node(2, 3, CircuitGridNode(node_types.X, 0, 1))
 
-    circuit_grid_model.set_node(2, 4, CircuitGridNode(node_types.X, 0, 0))
-    circuit_grid_model.set_node(1, 4, CircuitGridNode(node_types.TRACE))
+    circuit_grid_model.set_node(3, 4, CircuitGridNode(node_types.X, 0, 2))
 
-    circuit_grid_model.set_node(0, 5, CircuitGridNode(node_types.IDEN))
-    circuit_grid_model.set_node(2, 5, CircuitGridNode(node_types.Z, np.pi/4, 1))
+    circuit_grid_model.set_node(0, 5, CircuitGridNode(node_types.X, 0, 3))
+    circuit_grid_model.set_node(1, 5, CircuitGridNode(node_types.TRACE))
+    circuit_grid_model.set_node(2, 5, CircuitGridNode(node_types.TRACE))
 
-    circuit_grid_model.set_node(2, 6, CircuitGridNode(node_types.X, 0, 0, 1))
+    circuit_grid_model.set_node(0, 6, CircuitGridNode(node_types.Y))
+    circuit_grid_model.set_node(1, 6, CircuitGridNode(node_types.Y))
+    circuit_grid_model.set_node(2, 6, CircuitGridNode(node_types.Y))
+    circuit_grid_model.set_node(3, 6, CircuitGridNode(node_types.Y))
 
-    circuit_grid_model.set_node(1, 7, CircuitGridNode(node_types.H, 0, 2))
-    circuit_grid_model.set_node(0, 7, CircuitGridNode(node_types.IDEN))
+    circuit_grid_model.set_node(1, 7, CircuitGridNode(node_types.X, 0, 0))
 
-    circuit_grid_model.set_node(1, 8, CircuitGridNode(node_types.Y, 0, 0))
-    circuit_grid_model.set_node(2, 8, CircuitGridNode(node_types.IDEN))
+    circuit_grid_model.set_node(2, 8, CircuitGridNode(node_types.X, 0, 1))
 
-    circuit_grid_model.set_node(2, 9, CircuitGridNode(node_types.Z, 0, 0))
-    circuit_grid_model.set_node(1, 9, CircuitGridNode(node_types.TRACE))
+    circuit_grid_model.set_node(3, 9, CircuitGridNode(node_types.X, 0, 2))
 
-    circuit_grid_model.set_node(0, 10, CircuitGridNode(node_types.IDEN))
-    circuit_grid_model.set_node(1, 10, CircuitGridNode(node_types.SWAP, 0, -1, -1, 2))
+    circuit_grid_model.set_node(0, 10, CircuitGridNode(node_types.X, 0, 3))
+    circuit_grid_model.set_node(1, 10, CircuitGridNode(node_types.TRACE))
+    circuit_grid_model.set_node(2, 10, CircuitGridNode(node_types.TRACE))
 
-    circuit_grid_model.set_node(2, 11, CircuitGridNode(node_types.SWAP, 0, 1, -1, 0))
+    circuit_grid_model.set_node(0, 11, CircuitGridNode(node_types.Y))
+    circuit_grid_model.set_node(1, 11, CircuitGridNode(node_types.Y))
+    circuit_grid_model.set_node(2, 11, CircuitGridNode(node_types.Y))
+    circuit_grid_model.set_node(3, 11, CircuitGridNode(node_types.Y))
 
-    circuit_grid_model.set_node(0, 12, CircuitGridNode(node_types.X, 0, 1, 2))
+    circuit_grid_model.set_node(1, 12, CircuitGridNode(node_types.X, 0, 0))
 
-    print("str(circuit_grid_model): ", str(circuit_grid_model))
+    circuit_grid_model.set_node(2, 13, CircuitGridNode(node_types.X, 0, 1))
+
+    circuit_grid_model.set_node(3, 14, CircuitGridNode(node_types.X, 0, 2))
+
+    circuit_grid_model.set_node(0, 15, CircuitGridNode(node_types.X, 0, 3))
+    circuit_grid_model.set_node(1, 15, CircuitGridNode(node_types.TRACE))
+    circuit_grid_model.set_node(2, 15, CircuitGridNode(node_types.TRACE))
+
+    # print("str(circuit_grid_model): ", str(circuit_grid_model))
 
     circuit = circuit_grid_model.compute_circuit()
 
@@ -432,6 +431,13 @@ def main():
                 print('after block swipe, mse: ', unitary_grid.cost_desired_vs_unitary())
 
                 # TODO: Apply optimization
+                rotation_gate_nodes = circuit_grid_model.get_rotation_gate_nodes()
+
+                for rot_gate_node in rotation_gate_nodes:
+                    circuit_grid.rotate_gate_absolute(rot_gate_node, random.uniform(0, np.pi))
+
+                update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
+                                unitary_grid)
 
                 # TODO: Uncomment to reset dirty flag
                 # desired_vs_unitary_dirty = False

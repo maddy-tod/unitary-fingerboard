@@ -36,14 +36,18 @@ class CircuitGridModel():
                 retval += str(self.get_node_gate_part(wire_num, column_num)) + ', '
         return 'CircuitGridModel: ' + retval
 
-    # def set_node(self, wire_num, column_num, node_type, radians=0, ctrl_a=-1, ctrl_b=-1, swap=-1):
     def set_node(self, wire_num, column_num, circuit_grid_node):
-        self.nodes[wire_num][column_num] = \
-            CircuitGridNode(circuit_grid_node.node_type,
-                            circuit_grid_node.radians,
-                            circuit_grid_node.ctrl_a,
-                            circuit_grid_node.ctrl_b,
-                            circuit_grid_node.swap)
+        # First, embed the wire and column locations in the node
+        circuit_grid_node.wire_num = wire_num
+        circuit_grid_node.column_num = column_num
+        self.nodes[wire_num][column_num] = circuit_grid_node
+
+        # self.nodes[wire_num][column_num] = \
+        #     CircuitGridNode(circuit_grid_node.node_type,
+        #                     circuit_grid_node.radians,
+        #                     circuit_grid_node.ctrl_a,
+        #                     circuit_grid_node.ctrl_b,
+        #                     circuit_grid_node.swap)
 
         # TODO: Decide whether to protect as shown below
         # if not self.nodes[wire_num][column_num]:
@@ -89,11 +93,17 @@ class CircuitGridModel():
                         #       " on wire: " , gate_wire_num)
         return gate_wire_num
 
-    # def avail_gate_parts_for_node(self, wire_num, column_num):
-    #     retval = np.empty(0, dtype = np.int8)
-    #     node_gate_part = self.get_node_gate_part(wire_num, column_num)
-    #     if node_gate_part == node_types.EMPTY:
-    #         # No gate part in this node
+    def get_rotation_gate_nodes(self):
+        rot_gate_nodes = []
+        for wire_num in range(self.max_wires):
+            for column_num in range(self.max_columns):
+                node = self.nodes[wire_num][column_num]
+                if node and node.ctrl_a == -1:
+                    if node.node_type == node_types.X or \
+                            node.node_type == node_types.Y or \
+                            node.node_type == node_types.Z:
+                        rot_gate_nodes.append(node)
+        return rot_gate_nodes
 
 
     def compute_circuit(self):
@@ -190,6 +200,8 @@ class CircuitGridNode():
         self.ctrl_a = ctrl_a
         self.ctrl_b = ctrl_b
         self.swap = swap
+        self.wire_num = -1
+        self.column_num = -1
 
     def __str__(self):
         string = 'type: ' + str(self.node_type)
