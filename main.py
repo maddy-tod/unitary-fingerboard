@@ -22,6 +22,7 @@
 """Create quantum circuits with Qiskit and Pygame"""
 
 import random
+import scipy.optimize
 from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister
 from qiskit import execute
 # import pygame, pygame.midi
@@ -433,8 +434,18 @@ def main():
                 # TODO: Apply optimization
                 rotation_gate_nodes = circuit_grid_model.get_rotation_gate_nodes()
 
-                for rot_gate_node in rotation_gate_nodes:
-                    circuit_grid.rotate_gate_absolute(rot_gate_node, random.uniform(0, np.pi))
+                initial_rotations = np.zeros(len(rotation_gate_nodes))
+                rotation_bounds = np.zeros((len(rotation_gate_nodes), 2))
+                for idx in range(len(rotation_gate_nodes)):
+                    # circuit_grid.rotate_gate_absolute(rot_gate_node, random.uniform(0, np.pi))
+                    initial_rotations[idx] = rotation_gate_nodes[idx].radians
+                    rotation_bounds[idx] = [0.0, np.pi]
+
+                scipy.optimize.fmin_l_bfgs_b(desired_vs_unitary_objective_function,
+                                             x0=initial_rotations,
+                                             args=(circuit_grid, unitary_grid, rotation_gate_nodes),
+                                             # bounds=rotation_bounds,
+                                             approx_grad=True)
 
                 update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
                                 unitary_grid)
@@ -444,6 +455,17 @@ def main():
 
     del i
     pygame.quit()
+
+
+def desired_vs_unitary_objective_function(rotations_radians, *args):
+    circuit_grid = args[0]
+    unitary_grid = args[1]
+    rotation_gate_nodes = args[2]
+
+    for idx in range(len(rotation_gate_nodes)):
+        circuit_grid.rotate_gate_absolute(rotation_gate_nodes[idx], rotations_radians[idx])
+
+    return unitary_grid.cost_desired_vs_unitary()
 
 
 def update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
