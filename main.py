@@ -18,6 +18,12 @@
 # TODO: Standardize/straighten out row/column ordering related to unitary
 # TODO:     grid on display and Roli Block
 # TODO: Center probability squares on unitary grid display
+# TODO: Make Block connection optional
+# TODO: Add user interaction:
+# TODO:   - Selecting circuit node with mouse
+# TODO:   - Expressing transition desired probabilities with mouse (alternative to block)
+# TODO:   - Same gate twice erases (e.g. pressing X key already on an X gate erases it)
+# TODO:     - If gate was rotated, make unrotated (e.g. pressing X on rotated X gate makes X)
 #
 """Create quantum circuits with Qiskit and Pygame"""
 
@@ -77,50 +83,50 @@ def main():
 
     circuit_grid_model = CircuitGridModel(NUM_QUBITS, 18)
 
-    circuit_grid_model.set_node(0, 1, CircuitGridNode(node_types.Y))
-    circuit_grid_model.set_node(1, 1, CircuitGridNode(node_types.Y))
-    circuit_grid_model.set_node(2, 1, CircuitGridNode(node_types.Y))
-    circuit_grid_model.set_node(3, 1, CircuitGridNode(node_types.Y))
-
-    circuit_grid_model.set_node(1, 2, CircuitGridNode(node_types.X, 0, 0))
-
-    circuit_grid_model.set_node(2, 3, CircuitGridNode(node_types.X, 0, 1))
-
-    circuit_grid_model.set_node(3, 4, CircuitGridNode(node_types.X, 0, 2))
-
-    circuit_grid_model.set_node(0, 5, CircuitGridNode(node_types.X, 0, 3))
-    circuit_grid_model.set_node(1, 5, CircuitGridNode(node_types.TRACE))
-    circuit_grid_model.set_node(2, 5, CircuitGridNode(node_types.TRACE))
-
-    circuit_grid_model.set_node(0, 6, CircuitGridNode(node_types.Y))
-    circuit_grid_model.set_node(1, 6, CircuitGridNode(node_types.Y))
-    circuit_grid_model.set_node(2, 6, CircuitGridNode(node_types.Y))
-    circuit_grid_model.set_node(3, 6, CircuitGridNode(node_types.Y))
-
-    circuit_grid_model.set_node(1, 7, CircuitGridNode(node_types.X, 0, 0))
-
-    circuit_grid_model.set_node(2, 8, CircuitGridNode(node_types.X, 0, 1))
-
-    circuit_grid_model.set_node(3, 9, CircuitGridNode(node_types.X, 0, 2))
-
-    circuit_grid_model.set_node(0, 10, CircuitGridNode(node_types.X, 0, 3))
-    circuit_grid_model.set_node(1, 10, CircuitGridNode(node_types.TRACE))
-    circuit_grid_model.set_node(2, 10, CircuitGridNode(node_types.TRACE))
-
-    circuit_grid_model.set_node(0, 11, CircuitGridNode(node_types.Y))
-    circuit_grid_model.set_node(1, 11, CircuitGridNode(node_types.Y))
-    circuit_grid_model.set_node(2, 11, CircuitGridNode(node_types.Y))
-    circuit_grid_model.set_node(3, 11, CircuitGridNode(node_types.Y))
-
-    circuit_grid_model.set_node(1, 12, CircuitGridNode(node_types.X, 0, 0))
-
-    circuit_grid_model.set_node(2, 13, CircuitGridNode(node_types.X, 0, 1))
-
-    circuit_grid_model.set_node(3, 14, CircuitGridNode(node_types.X, 0, 2))
-
-    circuit_grid_model.set_node(0, 15, CircuitGridNode(node_types.X, 0, 3))
-    circuit_grid_model.set_node(1, 15, CircuitGridNode(node_types.TRACE))
-    circuit_grid_model.set_node(2, 15, CircuitGridNode(node_types.TRACE))
+    # circuit_grid_model.set_node(0, 1, CircuitGridNode(node_types.Y))
+    # circuit_grid_model.set_node(1, 1, CircuitGridNode(node_types.Y))
+    # circuit_grid_model.set_node(2, 1, CircuitGridNode(node_types.Y))
+    # circuit_grid_model.set_node(3, 1, CircuitGridNode(node_types.Y))
+    #
+    # circuit_grid_model.set_node(1, 2, CircuitGridNode(node_types.X, 0, 0))
+    #
+    # circuit_grid_model.set_node(2, 3, CircuitGridNode(node_types.X, 0, 1))
+    #
+    # circuit_grid_model.set_node(3, 4, CircuitGridNode(node_types.X, 0, 2))
+    #
+    # circuit_grid_model.set_node(0, 5, CircuitGridNode(node_types.X, 0, 3))
+    # circuit_grid_model.set_node(1, 5, CircuitGridNode(node_types.TRACE))
+    # circuit_grid_model.set_node(2, 5, CircuitGridNode(node_types.TRACE))
+    #
+    # circuit_grid_model.set_node(0, 6, CircuitGridNode(node_types.Y))
+    # circuit_grid_model.set_node(1, 6, CircuitGridNode(node_types.Y))
+    # circuit_grid_model.set_node(2, 6, CircuitGridNode(node_types.Y))
+    # circuit_grid_model.set_node(3, 6, CircuitGridNode(node_types.Y))
+    #
+    # circuit_grid_model.set_node(1, 7, CircuitGridNode(node_types.X, 0, 0))
+    #
+    # circuit_grid_model.set_node(2, 8, CircuitGridNode(node_types.X, 0, 1))
+    #
+    # circuit_grid_model.set_node(3, 9, CircuitGridNode(node_types.X, 0, 2))
+    #
+    # circuit_grid_model.set_node(0, 10, CircuitGridNode(node_types.X, 0, 3))
+    # circuit_grid_model.set_node(1, 10, CircuitGridNode(node_types.TRACE))
+    # circuit_grid_model.set_node(2, 10, CircuitGridNode(node_types.TRACE))
+    #
+    # circuit_grid_model.set_node(0, 11, CircuitGridNode(node_types.Y))
+    # circuit_grid_model.set_node(1, 11, CircuitGridNode(node_types.Y))
+    # circuit_grid_model.set_node(2, 11, CircuitGridNode(node_types.Y))
+    # circuit_grid_model.set_node(3, 11, CircuitGridNode(node_types.Y))
+    #
+    # circuit_grid_model.set_node(1, 12, CircuitGridNode(node_types.X, 0, 0))
+    #
+    # circuit_grid_model.set_node(2, 13, CircuitGridNode(node_types.X, 0, 1))
+    #
+    # circuit_grid_model.set_node(3, 14, CircuitGridNode(node_types.X, 0, 2))
+    #
+    # circuit_grid_model.set_node(0, 15, CircuitGridNode(node_types.X, 0, 3))
+    # circuit_grid_model.set_node(1, 15, CircuitGridNode(node_types.TRACE))
+    # circuit_grid_model.set_node(2, 15, CircuitGridNode(node_types.TRACE))
 
     # print("str(circuit_grid_model): ", str(circuit_grid_model))
 
@@ -213,7 +219,7 @@ def main():
 
             if prev_roli_block_y >= 0 and prev_roli_block_x >= 0:
                 # Remove the previous note from Roli block
-                prob_midi_val = int(abs(unitary_grid.unitary[prev_roli_block_x][prev_roli_block_y])**2 * 127)
+                prob_midi_val = int(abs(unitary_grid.unitary[prev_roli_block_y][prev_roli_block_x])**2 * 127)
                 midi_output.write([[[0xb0 + prev_roli_block_y, prev_roli_block_x, int(prob_midi_val)], 0]])
 
             # Save the coordinates that the measurement will be displayed
@@ -441,12 +447,12 @@ def main():
                     initial_rotations[idx] = rotation_gate_nodes[idx].radians
                     rotation_bounds[idx] = [np.pi / 8, 7 * np.pi / 8]
 
-                results = scipy.optimize.fmin_l_bfgs_b(desired_vs_unitary_objective_function,
-                                                       x0=initial_rotations,
-                                                       args=(circuit_grid, unitary_grid, rotation_gate_nodes),
-                                                       approx_grad=True,
-                                                       bounds=rotation_bounds)
-                print('results: ', results)
+                # results = scipy.optimize.fmin_l_bfgs_b(desired_vs_unitary_objective_function,
+                #                                        x0=initial_rotations,
+                #                                        args=(circuit_grid, unitary_grid, rotation_gate_nodes),
+                #                                        approx_grad=True,
+                #                                        bounds=rotation_bounds)
+                # print('results: ', results)
 
                 update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
                                 unitary_grid)
@@ -495,7 +501,7 @@ def update_roli_block_unitary(unitary_grid):
             for x in range(len(unitary)):
                 # Send probability value in a range from 0..127 inclusive where 127 means 1.0
                 # Use a separate MIDI Control Change xb0000-xb00FF for each point on the block
-                prob_midi_val = int(abs(unitary[x][y])**2 * 127)
+                prob_midi_val = int(abs(unitary[y][x])**2 * 127)
                 midi_output.write([[[0xb0 + y, x, int(prob_midi_val)], 0]])
 
 
