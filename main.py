@@ -454,6 +454,13 @@ def main():
                 #                                        bounds=rotation_bounds)
                 # print('results: ', results)
 
+                opt_rotations = optimize_rotations(desired_vs_unitary_objective_function,
+                                                   initial_rotations,
+                                                   circuit_grid,
+                                                   unitary_grid,
+                                                   rotation_gate_nodes)
+                print('opt_rotations: ', opt_rotations)
+
                 update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
                                 unitary_grid)
 
@@ -464,10 +471,71 @@ def main():
     pygame.quit()
 
 
-def desired_vs_unitary_objective_function(rotations_radians, *args):
-    circuit_grid = args[0]
-    unitary_grid = args[1]
-    rotation_gate_nodes = args[2]
+def optimize_rotations(objective_function, x0, circuit_grid, unitary_grid, rotation_gate_nodes):
+
+    # Tries to be plug-compatable with scipy.optimize.fmin_l_bfgs_b
+    optimization_epochs = 20
+    move_radians =np.pi / 8
+
+    optimized_rotations = np.copy(x0)
+    # min_distance = float("inf")
+
+    # For each rotation this will be either 1 or -1, signifying direction of movement
+    unit_direction_array = np.ones(len(optimized_rotations))
+
+    min_distance = objective_function(optimized_rotations, circuit_grid, unitary_grid, rotation_gate_nodes)
+
+    for epoch_idx in range(optimization_epochs):
+        for rotations_idx in range(len(optimized_rotations)):
+            cur_ang_rad = optimized_rotations[rotations_idx]
+            proposed_cur_ang_rad = cur_ang_rad
+
+            # Decide whether to increase or decrease angle
+            unit_direction_array[rotations_idx] = 1
+            if cur_ang_rad > np.pi:
+                unit_direction_array[rotations_idx] = -1
+            proposed_cur_ang_rad += move_radians * unit_direction_array[rotations_idx]
+            if 0.0 <= proposed_cur_ang_rad < np.pi:
+                optimized_rotations[rotations_idx] = proposed_cur_ang_rad
+
+                temp_distance = objective_function(optimized_rotations, circuit_grid, unitary_grid, rotation_gate_nodes)
+                if temp_distance > min_distance:
+                    # Moving in the wrong direction so restore the angle in the array and switch direction
+                    optimized_rotations[rotations_idx] = cur_ang_rad
+                    unit_direction_array[rotations_idx] *= -1
+                else:
+                    # Moving in the right direction so use the proposed angle
+                    cur_ang_rad = proposed_cur_ang_rad
+                    min_distance = temp_distance
+
+                finished_with_while_loop = False
+                loop_iterations = 0
+                while not finished_with_while_loop:
+                    loop_iterations += 1
+                    proposed_cur_ang_rad += move_radians * unit_direction_array[rotations_idx]
+                    if 0.0 <= proposed_cur_ang_rad < np.pi:
+                        optimized_rotations[rotations_idx] = proposed_cur_ang_rad
+                        temp_distance = objective_function(optimized_rotations, circuit_grid, unitary_grid, rotation_gate_nodes)
+                        if temp_distance > min_distance:
+                            # Distance is increasing so restore the angle in the array and leave the loop
+                            optimized_rotations[rotations_idx] = cur_ang_rad
+                            finished_with_while_loop = True
+                        elif loop_iterations > np.pi / move_radians:
+                            print("Unexpected: Was in while loop over ",  loop_iterations, " iterations")
+                            finished_with_while_loop = True
+                        else:
+                            # Distance is not increasing, so use the proposed angle
+                            cur_ang_rad = proposed_cur_ang_rad
+                            min_distance = temp_distance
+                    else:
+                        finished_with_while_loop = True
+    return optimized_rotations
+
+
+def desired_vs_unitary_objective_function(rotations_radians, circuit_grid, unitary_grid, rotation_gate_nodes):
+    # circuit_grid = args[0]
+    # unitary_grid = args[1]
+    # rotation_gate_nodes = args[2]
 
     for idx in range(len(rotation_gate_nodes)):
         circuit_grid.rotate_gate_absolute(rotation_gate_nodes[idx], rotations_radians[idx])
