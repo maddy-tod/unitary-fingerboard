@@ -83,25 +83,30 @@ def main():
 
     circuit_grid_model = CircuitGridModel(NUM_QUBITS, 18)
 
-    # circuit_grid_model.set_node(0, 1, CircuitGridNode(node_types.Y))
-    # circuit_grid_model.set_node(1, 1, CircuitGridNode(node_types.Y))
-    # circuit_grid_model.set_node(2, 1, CircuitGridNode(node_types.Y))
-    # circuit_grid_model.set_node(3, 1, CircuitGridNode(node_types.Y))
+    # circuit_grid_model.set_node(0, 1, CircuitGridNode(node_types.X, np.pi / 2))
+    # circuit_grid_model.set_node(1, 1, CircuitGridNode(node_types.X, np.pi / 2))
+    # circuit_grid_model.set_node(2, 1, CircuitGridNode(node_types.X, np.pi / 2))
+    # circuit_grid_model.set_node(3, 1, CircuitGridNode(node_types.X, np.pi / 2))
     #
-    # circuit_grid_model.set_node(1, 2, CircuitGridNode(node_types.X, 0, 0))
+    circuit_grid_model.set_node(0, 2, CircuitGridNode(node_types.Y))
+    circuit_grid_model.set_node(1, 4, CircuitGridNode(node_types.Y))
+    circuit_grid_model.set_node(2, 2, CircuitGridNode(node_types.Y))
+    circuit_grid_model.set_node(3, 6, CircuitGridNode(node_types.Y))
+
+    circuit_grid_model.set_node(1, 3, CircuitGridNode(node_types.X, 0, 0))
+
+    # circuit_grid_model.set_node(2, 4, CircuitGridNode(node_types.X, 0, 1))
+
+    circuit_grid_model.set_node(3, 5, CircuitGridNode(node_types.X, 0, 2))
     #
-    # circuit_grid_model.set_node(2, 3, CircuitGridNode(node_types.X, 0, 1))
-    #
-    # circuit_grid_model.set_node(3, 4, CircuitGridNode(node_types.X, 0, 2))
-    #
-    # circuit_grid_model.set_node(0, 5, CircuitGridNode(node_types.X, 0, 3))
-    # circuit_grid_model.set_node(1, 5, CircuitGridNode(node_types.TRACE))
-    # circuit_grid_model.set_node(2, 5, CircuitGridNode(node_types.TRACE))
-    #
-    # circuit_grid_model.set_node(0, 6, CircuitGridNode(node_types.Y))
-    # circuit_grid_model.set_node(1, 6, CircuitGridNode(node_types.Y))
-    # circuit_grid_model.set_node(2, 6, CircuitGridNode(node_types.Y))
-    # circuit_grid_model.set_node(3, 6, CircuitGridNode(node_types.Y))
+    # circuit_grid_model.set_node(0, 6, CircuitGridNode(node_types.X, 0, 3))
+    # circuit_grid_model.set_node(1, 6, CircuitGridNode(node_types.TRACE))
+    # circuit_grid_model.set_node(2, 6, CircuitGridNode(node_types.TRACE))
+
+    # circuit_grid_model.set_node(0, 6, CircuitGridNode(node_types.Y, np.pi))
+    # circuit_grid_model.set_node(1, 6, CircuitGridNode(node_types.Y, np.pi))
+    # circuit_grid_model.set_node(2, 6, CircuitGridNode(node_types.Y, np.pi))
+    # circuit_grid_model.set_node(3, 6, CircuitGridNode(node_types.Y, np.pi))
     #
     # circuit_grid_model.set_node(1, 7, CircuitGridNode(node_types.X, 0, 0))
     #
@@ -113,10 +118,10 @@ def main():
     # circuit_grid_model.set_node(1, 10, CircuitGridNode(node_types.TRACE))
     # circuit_grid_model.set_node(2, 10, CircuitGridNode(node_types.TRACE))
     #
-    # circuit_grid_model.set_node(0, 11, CircuitGridNode(node_types.Y))
-    # circuit_grid_model.set_node(1, 11, CircuitGridNode(node_types.Y))
-    # circuit_grid_model.set_node(2, 11, CircuitGridNode(node_types.Y))
-    # circuit_grid_model.set_node(3, 11, CircuitGridNode(node_types.Y))
+    # circuit_grid_model.set_node(0, 11, CircuitGridNode(node_types.Y, np.pi))
+    # circuit_grid_model.set_node(1, 11, CircuitGridNode(node_types.Y, np.pi))
+    # circuit_grid_model.set_node(2, 11, CircuitGridNode(node_types.Y, np.pi))
+    # circuit_grid_model.set_node(3, 11, CircuitGridNode(node_types.Y, np.pi))
     #
     # circuit_grid_model.set_node(1, 12, CircuitGridNode(node_types.X, 0, 0))
     #
@@ -431,6 +436,8 @@ def main():
                         row_num = midi_ev.status - 160
                         col_num = midi_ev.data1
                         unitary_grid.desired_matrix[row_num, col_num] = midi_ev.data2 / 127.0
+                elif midi_ev.status == 176:
+                    if midi_ev.data1 == 0 and midi_ev.data2 == 0:
                         desired_vs_unitary_dirty = True
 
             if desired_vs_unitary_dirty:
@@ -440,12 +447,14 @@ def main():
                 # TODO: Apply optimization
                 rotation_gate_nodes = circuit_grid_model.get_rotation_gate_nodes()
 
-                initial_rotations = np.zeros(len(rotation_gate_nodes))
+                # initial_rotations = np.zeros(len(rotation_gate_nodes))
+                initial_rotations = np.full(len(rotation_gate_nodes), np.pi)
+
                 rotation_bounds = np.zeros((len(rotation_gate_nodes), 2))
-                for idx in range(len(rotation_gate_nodes)):
+                # for idx in range(len(rotation_gate_nodes)):
                     # circuit_grid.rotate_gate_absolute(rot_gate_node, random.uniform(0, np.pi))
-                    initial_rotations[idx] = rotation_gate_nodes[idx].radians
-                    rotation_bounds[idx] = [np.pi / 8, 7 * np.pi / 8]
+                    # initial_rotations[idx] = rotation_gate_nodes[idx].radians
+                    # rotation_bounds[idx] = [np.pi / 8, 7 * np.pi / 8]
 
                 # results = scipy.optimize.fmin_l_bfgs_b(desired_vs_unitary_objective_function,
                 #                                        x0=initial_rotations,
@@ -465,7 +474,7 @@ def main():
                                 unitary_grid)
 
                 # TODO: Uncomment to reset dirty flag
-                # desired_vs_unitary_dirty = False
+                desired_vs_unitary_dirty = False
 
     del i
     pygame.quit()
@@ -474,8 +483,8 @@ def main():
 def optimize_rotations(objective_function, x0, circuit_grid, unitary_grid, rotation_gate_nodes):
 
     # Tries to be plug-compatable with scipy.optimize.fmin_l_bfgs_b
-    optimization_epochs = 20
-    move_radians =np.pi / 8
+    optimization_epochs = 3
+    move_radians = np.pi / 8
 
     optimized_rotations = np.copy(x0)
     # min_distance = float("inf")
@@ -495,7 +504,7 @@ def optimize_rotations(objective_function, x0, circuit_grid, unitary_grid, rotat
             if cur_ang_rad > np.pi:
                 unit_direction_array[rotations_idx] = -1
             proposed_cur_ang_rad += move_radians * unit_direction_array[rotations_idx]
-            if 0.0 <= proposed_cur_ang_rad < np.pi:
+            if 0.0 <= proposed_cur_ang_rad < np.pi * 2:
                 optimized_rotations[rotations_idx] = proposed_cur_ang_rad
 
                 temp_distance = objective_function(optimized_rotations, circuit_grid, unitary_grid, rotation_gate_nodes)
@@ -513,14 +522,14 @@ def optimize_rotations(objective_function, x0, circuit_grid, unitary_grid, rotat
                 while not finished_with_while_loop:
                     loop_iterations += 1
                     proposed_cur_ang_rad += move_radians * unit_direction_array[rotations_idx]
-                    if 0.0 <= proposed_cur_ang_rad < np.pi:
+                    if 0.0 <= proposed_cur_ang_rad < np.pi * 2:
                         optimized_rotations[rotations_idx] = proposed_cur_ang_rad
                         temp_distance = objective_function(optimized_rotations, circuit_grid, unitary_grid, rotation_gate_nodes)
                         if temp_distance > min_distance:
                             # Distance is increasing so restore the angle in the array and leave the loop
                             optimized_rotations[rotations_idx] = cur_ang_rad
                             finished_with_while_loop = True
-                        elif loop_iterations > np.pi / move_radians:
+                        elif loop_iterations > np.pi * 2 / move_radians:
                             print("Unexpected: Was in while loop over ",  loop_iterations, " iterations")
                             finished_with_while_loop = True
                         else:
@@ -539,8 +548,11 @@ def desired_vs_unitary_objective_function(rotations_radians, circuit_grid, unita
 
     for idx in range(len(rotation_gate_nodes)):
         circuit_grid.rotate_gate_absolute(rotation_gate_nodes[idx], rotations_radians[idx])
+        unitary_grid.set_circuit(circuit_grid.circuit_grid_model.compute_circuit())
+        cost = unitary_grid.cost_desired_vs_unitary()
 
-    return unitary_grid.cost_desired_vs_unitary()
+        print("rotations_radians: ", rotations_radians, ", cost: ", cost)
+    return cost
 
 
 def update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,

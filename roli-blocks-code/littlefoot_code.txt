@@ -66,5 +66,8 @@ void handleMIDI (int byte0, int byte1, int byte2)
 void handleButtonDown (int index)
 {
     clearDisplay();
+
+    // Tell app to optimize rotations
+    sendMIDI(0xB0, 0, 0);
 }
 
