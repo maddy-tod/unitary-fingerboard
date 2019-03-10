@@ -25,6 +25,28 @@ void drawTouch (float touchX, float touchY, float z) {
     log(pressureRange_0_127);
     sendMIDI(0xA0 + y, x, pressureRange_0_127);
 
+    // Based upon pressure, draw on surrounding pixels
+    if (x > 0) {
+        fillRect (0x00000000, x - 1, y, 1, 1);
+        blendRect (pressure_argb_color, x - 1, y, 1, 1);
+        sendMIDI(0xA0 + y, x - 1, pressureRange_0_127);
+    }
+    if (x < 15) {
+        fillRect (0x00000000, x - 1, y, 1, 1);
+        blendRect (pressure_argb_color, x - 1, y, 1, 1);
+        sendMIDI(0xA0 + y, x + 1, pressureRange_0_127);
+    }
+    if (y > 0) {
+        fillRect (0x00000000, x, y - 1, 1, 1);
+        blendRect (pressure_argb_color, x, y - 1, 1, 1);
+        sendMIDI(0xA0 + (y - 1), x, pressureRange_0_127);
+    }
+    if (y < 15) {
+        fillRect (0x00000000, x, y + 1, 1, 1);
+        blendRect (pressure_argb_color, x, y + 1, 1, 1);
+        sendMIDI(0xA0 + (y + 1), x, pressureRange_0_127);
+    }
+
 }
 
 void repaint()
