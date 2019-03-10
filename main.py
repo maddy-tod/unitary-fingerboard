@@ -24,6 +24,7 @@
 # TODO:   - Expressing transition desired probabilities with mouse (alternative to block)
 # TODO:   - Same gate twice erases (e.g. pressing X key already on an X gate erases it)
 # TODO:     - If gate was rotated, make unrotated (e.g. pressing X on rotated X gate makes X)
+# TODO: Use NUM_STATE_DIMS everywhere
 #
 """Create quantum circuits with Qiskit and Pygame"""
 
@@ -441,6 +442,7 @@ def main():
                         desired_vs_unitary_dirty = True
 
             if desired_vs_unitary_dirty:
+                unitary_grid.normalize_desired_unitary()
                 unitary_grid.draw_unitary_grid(None, None)
                 print('after block swipe, mse: ', unitary_grid.cost_desired_vs_unitary())
 
@@ -473,7 +475,7 @@ def main():
                 update_circ_viz(circuit, circuit_grid_model, circuit_grid, middle_sprites,
                                 unitary_grid)
 
-                # TODO: Uncomment to reset dirty flag
+                unitary_grid.zero_desired_unitary()
                 desired_vs_unitary_dirty = False
 
     del i
