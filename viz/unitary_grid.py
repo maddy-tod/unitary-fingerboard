@@ -33,7 +33,7 @@ class UnitaryGrid(pygame.sprite.Sprite):
         self.rect = None
         self.basis_states = PITCH_STATE_NAMES
         self.unitary = None
-        self.desired_matrix = np.zeros((2 ** NUM_QUBITS, 2 ** NUM_QUBITS))
+        self.desired_stochastic_matrix = np.zeros((2 ** NUM_QUBITS, 2 ** NUM_QUBITS))
         self.set_circuit(circuit)
 
     # def update(self):
@@ -81,8 +81,8 @@ class UnitaryGrid(pygame.sprite.Sprite):
                             pygame.draw.rect(self.image, BLACK, rect, 5)
 
                 # Draw where touched on Roli Block
-                if self.desired_matrix[y][x] != 0:
-                    radius = int(self.desired_matrix[y][x] * 8)
+                if self.desired_stochastic_matrix[y][x] != 0:
+                    radius = int(self.desired_stochastic_matrix[y][x] * 8)
                     x_pos = int((x + 1) * block_size + x_offset + (block_size / 2))
                     y_pos = int((y + 1) * block_size + y_offset + (block_size / 2))
                     circle_color = pygame.Color(0, 0, 255)
@@ -92,20 +92,20 @@ class UnitaryGrid(pygame.sprite.Sprite):
         self.draw_unitary_grid(init_bit_str, meas_bit_str)
 
     def cost_desired_vs_unitary(self):
-        mse = np.square(self.desired_matrix -
+        mse = np.square(self.desired_stochastic_matrix -
                         np.square(np.abs(self.unitary))).mean()
         return mse
 
     def zero_desired_unitary(self):
-        self.desired_matrix = np.zeros((2 ** NUM_QUBITS, 2 ** NUM_QUBITS))
+        self.desired_stochastic_matrix = np.zeros((2 ** NUM_QUBITS, 2 ** NUM_QUBITS))
 
     """Make sum of matrix equal number of quantum state dimensions"""
     def normalize_desired_unitary(self):
-        matrix_sum = self.desired_matrix.sum()
+        matrix_sum = self.desired_stochastic_matrix.sum()
         if matrix_sum != 0:
             scale_factor = NUM_STATE_DIMS / matrix_sum
-            self.desired_matrix *= scale_factor
-            print("desired_matrix.sum(): ", self.desired_matrix.sum())
+            self.desired_stochastic_matrix *= scale_factor
+            print("desired_matrix.sum(): ", self.desired_stochastic_matrix.sum())
         else:
             print("desired_matrix.sum() was 0")
 

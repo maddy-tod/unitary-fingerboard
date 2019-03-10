@@ -433,10 +433,10 @@ def main():
 
             for index, midi_ev in enumerate(midi_evs):
                 if 160 <= midi_ev.status < 176:
-                    if unitary_grid.desired_matrix is not None:
+                    if unitary_grid.desired_stochastic_matrix is not None:
                         row_num = midi_ev.status - 160
                         col_num = midi_ev.data1
-                        unitary_grid.desired_matrix[row_num, col_num] = midi_ev.data2 / 127.0
+                        unitary_grid.desired_stochastic_matrix[row_num, col_num] = midi_ev.data2 / 127.0
                 elif midi_ev.status == 176:
                     if midi_ev.data1 == 0 and midi_ev.data2 == 0:
                         desired_vs_unitary_dirty = True
