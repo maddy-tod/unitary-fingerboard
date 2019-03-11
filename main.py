@@ -84,55 +84,16 @@ def main():
 
     circuit_grid_model = CircuitGridModel(NUM_QUBITS, 18)
 
-    circuit_grid_model.set_node(0, 1, CircuitGridNode(node_types.X))
-    circuit_grid_model.set_node(1, 1, CircuitGridNode(node_types.X))
-    circuit_grid_model.set_node(2, 1, CircuitGridNode(node_types.X, np.pi / 2))
-    circuit_grid_model.set_node(3, 1, CircuitGridNode(node_types.X, np.pi / 2))
-    #
-    # circuit_grid_model.set_node(0, 2, CircuitGridNode(node_types.Y))
-    # circuit_grid_model.set_node(1, 4, CircuitGridNode(node_types.Y))
-    # circuit_grid_model.set_node(2, 2, CircuitGridNode(node_types.Y))
-    # circuit_grid_model.set_node(3, 6, CircuitGridNode(node_types.Y))
-    #
-    # circuit_grid_model.set_node(1, 3, CircuitGridNode(node_types.X, 0, 0))
+    circuit_grid_model.set_node(0, 1, CircuitGridNode(node_types.Y))
+    circuit_grid_model.set_node(2, 1, CircuitGridNode(node_types.Y))
 
-    # circuit_grid_model.set_node(2, 4, CircuitGridNode(node_types.X, 0, 1))
+    circuit_grid_model.set_node(1, 2, CircuitGridNode(node_types.X, 0, 0))
+    circuit_grid_model.set_node(2, 3, CircuitGridNode(node_types.X, 0, 1))
 
-    # circuit_grid_model.set_node(3, 5, CircuitGridNode(node_types.X, 0, 2))
-    #
-    # circuit_grid_model.set_node(0, 6, CircuitGridNode(node_types.X, 0, 3))
-    # circuit_grid_model.set_node(1, 6, CircuitGridNode(node_types.TRACE))
-    # circuit_grid_model.set_node(2, 6, CircuitGridNode(node_types.TRACE))
+    circuit_grid_model.set_node(1, 4, CircuitGridNode(node_types.Y))
+    circuit_grid_model.set_node(3, 4, CircuitGridNode(node_types.Y))
 
-    # circuit_grid_model.set_node(0, 6, CircuitGridNode(node_types.Y, np.pi))
-    # circuit_grid_model.set_node(1, 6, CircuitGridNode(node_types.Y, np.pi))
-    # circuit_grid_model.set_node(2, 6, CircuitGridNode(node_types.Y, np.pi))
-    # circuit_grid_model.set_node(3, 6, CircuitGridNode(node_types.Y, np.pi))
-    #
-    # circuit_grid_model.set_node(1, 7, CircuitGridNode(node_types.X, 0, 0))
-    #
-    # circuit_grid_model.set_node(2, 8, CircuitGridNode(node_types.X, 0, 1))
-    #
-    # circuit_grid_model.set_node(3, 9, CircuitGridNode(node_types.X, 0, 2))
-    #
-    # circuit_grid_model.set_node(0, 10, CircuitGridNode(node_types.X, 0, 3))
-    # circuit_grid_model.set_node(1, 10, CircuitGridNode(node_types.TRACE))
-    # circuit_grid_model.set_node(2, 10, CircuitGridNode(node_types.TRACE))
-    #
-    # circuit_grid_model.set_node(0, 11, CircuitGridNode(node_types.Y, np.pi))
-    # circuit_grid_model.set_node(1, 11, CircuitGridNode(node_types.Y, np.pi))
-    # circuit_grid_model.set_node(2, 11, CircuitGridNode(node_types.Y, np.pi))
-    # circuit_grid_model.set_node(3, 11, CircuitGridNode(node_types.Y, np.pi))
-    #
-    # circuit_grid_model.set_node(1, 12, CircuitGridNode(node_types.X, 0, 0))
-    #
-    # circuit_grid_model.set_node(2, 13, CircuitGridNode(node_types.X, 0, 1))
-    #
-    # circuit_grid_model.set_node(3, 14, CircuitGridNode(node_types.X, 0, 2))
-    #
-    # circuit_grid_model.set_node(0, 15, CircuitGridNode(node_types.X, 0, 3))
-    # circuit_grid_model.set_node(1, 15, CircuitGridNode(node_types.TRACE))
-    # circuit_grid_model.set_node(2, 15, CircuitGridNode(node_types.TRACE))
+
 
     # print("str(circuit_grid_model): ", str(circuit_grid_model))
 
@@ -436,7 +397,8 @@ def main():
                     if unitary_grid.desired_stochastic_matrix is not None:
                         row_num = midi_ev.status - 160
                         col_num = midi_ev.data1
-                        unitary_grid.desired_stochastic_matrix[row_num, col_num] = midi_ev.data2 / 127.0
+                        unitary_grid.desired_stochastic_matrix[row_num, col_num] = \
+                            max(unitary_grid.desired_stochastic_matrix[row_num, col_num], midi_ev.data2 / 127.0)
                 elif midi_ev.status == 176:
                     if midi_ev.data1 == 0 and midi_ev.data2 == 0:
                         desired_vs_unitary_dirty = True
