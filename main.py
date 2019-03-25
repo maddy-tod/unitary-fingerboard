@@ -202,7 +202,6 @@ def main():
             midi_output.write([[[0x90, pitch_meas, 127], recent_note_time + 0]])
             # melody_circ = createTransitionCircuit(cur_mel_midi_vals)
 
-
         if joystick:
             gamepad_move = False
             joystick_hat = joystick.get_hat(0)
@@ -633,6 +632,7 @@ def measure_circuit(circ, initial_bit_str, unitary_grid):
     # print ("basis_state_str: ", basis_state_str)
 
     return basis_state_str
+
 
 if __name__ == '__main__':
     main()
